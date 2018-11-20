@@ -1,4 +1,5 @@
 from enum import Enum
+from collections import namedtuple
 
 
 class MenuItemAvailability(Enum):
@@ -7,12 +8,6 @@ class MenuItemAvailability(Enum):
     OutOfSeason = 3
 
 
-class MenuItem:
-
-    def __init__(self, id:int = 0, name:str='', price=0.00, availability:MenuItemAvailability=1):
-        self.ID = id
-        self.Name = name
-        self.Price = price
-        self.Availability = availability
+Menu_Item = namedtuple('Menu_Item', ['ID', 'name', 'description', 'price'])
 
 

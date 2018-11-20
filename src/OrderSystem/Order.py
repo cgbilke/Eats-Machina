@@ -1,6 +1,6 @@
 from enum import Enum
 
-from OrderSystem.MenuItem import MenuItemAvailability, MenuItem
+from OrderSystem.MenuItem import MenuItemAvailability, Menu_Item
 from OrderSystem.OrderItem import OrderItem
 
 
@@ -16,14 +16,17 @@ class Order:
 
     tax_rate = 0.0945
 
-    def __init__(self, diner_id: int, first_item: MenuItem, first_quantity: int=1, status: OrderStatus=OrderStatus.New):
+    active_states = [OrderStatus.Ordered, OrderStatus.Cooking]
+
+    def __init__(self, diner_id: int, first_item: Menu_Item, first_quantity: int=1, status: OrderStatus=OrderStatus.New):
         self.DinerID = diner_id
         self.Status = status
         self.TimePlaced = None
         self.SubTotal = 0.00
         self.TaxTotal = 0.00
         self.OrderTotal = 0.00
-        self.OrderItems = []
+        self.OrderItems = {}
+        # self.OrderItems = []
         self.Payment = None
 
         self.add_item(first_item, first_quantity)
@@ -31,18 +34,18 @@ class Order:
     def has_payment(self):
         return self.Payment is None
 
-    def add_item(self, item: MenuItem, quantity: int=1):
+    def add_item(self, item: Menu_Item, quantity: int=1):
         if item is None:
             print('Throw Exception: Invalid argument item')
             return
-        ord_item = self.find_menu_item(item)
+        ord_item = self.find_order_item_by_menu_item(item)
         if ord_item is None:
             ord_item = OrderItem(item, quantity)
-            self.OrderItems.append(ord_item)
+            self.OrderItems[ord_item.MenuItem.ID] = ord_item
         self.calculate_total()
 
-    def change_quantity(self, menu_item: MenuItem, new_quantity: int):
-        ord_item = self.find_menu_item(menu_item)
+    def change_quantity(self, menu_item: Menu_Item, new_quantity: int):
+        ord_item = self.find_order_item_by_menu_item(menu_item)
         if ord_item is None:
             print('Throw Exception: Invalid menu_item')
             return
@@ -50,22 +53,21 @@ class Order:
         ord_item.calc_total()
         self.calculate_total()
 
-    def remove_item(self, menu_item: MenuItem=None, order_item: OrderItem=None):
+    def remove_item(self, menu_item: Menu_Item=None, order_item: OrderItem=None):
         if order_item is None:
             if menu_item is None:
                 print('Throw Exception: Invalid argument: menu_item or order_item must be set and in the order.')
                 return
-            order_item = self.find_menu_item(menu_item)
+            order_item = self.find_order_item_by_menu_item(menu_item)
             if order_item is None:
                 print("This might be an error. But there's no matching order item to delete.")
                 return
-        self.OrderItems.remove(order_item)
+        del self.OrderItems[order_item.MenuItem.ID]
         self.calculate_total()
 
-    def find_menu_item(self, menu_item: MenuItem):
-        matches = [oi for oi in self.OrderItems if oi.MenuItem == menu_item]
-        if len(matches) > 0:
-            return matches[0]
+    def find_order_item_by_menu_item(self, menu_item: Menu_Item):
+        if menu_item.ID in self.OrderItems:
+            return self.OrderItems[menu_item.ID]
         else:
             return None
 
@@ -76,7 +78,7 @@ class Order:
         self.OrderTotal = self.SubTotal + self.TaxTotal
 
     def calculate_tax(self):
-        return self.tax_rate * self.SubTotal
+        return Order.tax_rate * self.SubTotal
 
     def get_items(self):
         return self.OrderItems[:]
@@ -96,11 +98,14 @@ class Order:
 
         return response
 
+    def is_active(self):
+        return self.Status in Order.active_states
+
 
 def test_order_init():
     expected_diner_id = 143
-
-    exp_item_1 = MenuItem(5381, 'Item One', 5.95, MenuItemAvailability.Available)
+    # exp_item_1 = Menu_Item(5381, 'Item One', 5.95, MenuItemAvailability.Available)
+    exp_item_1 = Menu_Item(5381, 'Item One', 'The First Item', 5.95)
     exp_quan_1 = 1
     order = Order(expected_diner_id, exp_item_1)
 
@@ -119,7 +124,8 @@ def test_order_init():
     if actual_ord_total != exp_ord_total:
         print('Problem with order total for Order init. Expected', exp_ord_total, 'found', actual_ord_total)
 
-    exp_item_2 = MenuItem(59, 'Item Two', 3.00, MenuItemAvailability.Available)
+    # exp_item_2 = Menu_Item(59, 'Item Two', 3.00, MenuItemAvailability.Available)
+    exp_item_2 = Menu_Item(59, 'Item Two', 'Second Item', 3.00)
     exp_quan_2 = 7
 
     exp_sub_total = 26.95
@@ -153,7 +159,7 @@ def test_order_init():
     actual_ord_total = order.OrderTotal
 
     if actual_sub_total != exp_sub_total:
-        print('Problem with item subtotal for Order change_quantity. Expected', exp_sub_total, 'found', actual_sub_total)
+        print('Problem with subtotal for Order change_quantity. Expected', exp_sub_total, 'found', actual_sub_total)
     if actual_tax_total != exp_tax_total:
         print('Problem with tax total for Order change_quantity. Expected', exp_tax_total, 'found', actual_tax_total)
     if actual_ord_total != exp_ord_total:
