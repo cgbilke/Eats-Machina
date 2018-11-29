@@ -1,0 +1,40 @@
+﻿doctype html
+html
+  head
+    title= title
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel='stylesheet', href='/stylesheets/main.css')
+    link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO", crossorigin="anonymous")
+    script(type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js", integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy", crossorigin="anonymous")
+  body
+    div(class='container-fluid navContainer')
+            nav(class='row')
+                div(class='col-12')
+                    div(class='navbar navbar-light navbar-expand-sm')
+                        a(href='/')
+                            img(width='100%' class='navbar-brand'  src='' alt="Eats-Machina")
+                        //if(user)
+                            li
+                                span=req.user.name
+
+                        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                            span(class="navbar-toggler-icon")
+                        div(class='collapse navbar-collapse' id='navbarSupportedContent')
+                            ul(class='navbar-nav ml-auto')
+                                if(user)
+                                    if(user.role == 'manager')
+                                        li(class='nav-item')
+                                            a(class='nav-link', href='/manager/orders') Inventory
+                                        li(class='nav-item')
+                                            a(class='nav-link', href='/manageer/inventory') Inventory
+                                    else
+                                        li(class='nav-item')
+                                            a(class='nav-link', href='/customer/order') Order
+                                        li(class='nav-item')
+                                            a(class='nav-link', href='/customer/cart') View Cart
+                                    li(class='nav-item')
+                                        a(class='nav-link', href='/logout') Log Out
+                                else
+                                    li(class='nav-item')
+                                        a(class='nav-link', href='/login') Log in 
+    block content
