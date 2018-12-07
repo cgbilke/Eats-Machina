@@ -2,39 +2,44 @@
 
 block content
     div(class='container')
-        form(name="order" action='/customer/order' method='POST')
-            input(type='hidden' name='id' value=orderInfo.id)
-            -var total = 0
-            case orderInfo.status
-                        when 1
-                            -var status = 'new'
-                        when 2
-                            -var status = 'ordered'
-                        when 3
-                            -var status = 'cooking'
-                        when 4
-                            -var status = 'canceled'
-                        when 5
-                            -var status = 'finished'
-            h1 Order #{orderInfo.id} Status #{status}
-            each item in order
-                if(item.id &&  item.quantity !== 0)
-                    div.row
-                        div.col-2
-                            h5=item.name
-                        div.col-4
-                            h5=item.description
-                        div.col-1
-                            h5 $#{item.price}
-                        div.col-1
-                            h5 X  ##{item.quantity}
-                        div.col-2
-                            -var lineTot = item.quantity * item.price;
-                            -total += lineTot;
-                            h5 = $ #{lineTot}
-            div.row
-                div.col-12
-                    if(total===0)
-                        h2 Your Cart Is Empty
+        -var total = 0
+        case orderInfo.status
+                    when 1
+                        -var status = 'new'
+                    when 2
+                        -var status = 'ordered'
+                    when 3
+                        -var status = 'cooking'
+                    when 4
+                        -var status = 'canceled'
+                    when 5
+                        -var status = 'finished'
+        h1 Order #{orderInfo.id} Status #{status}
+        each item in order
+            if(item.id &&  item.quantity !== 0)
+                div.row
+                    div.col-2
+                        h5=item.name
+                    div.col-4
+                        h5=item.description
+                    div.col-1
+                        h5 $#{item.price}
+                    div.col-1
+                        h5 X  ##{item.quantity}
+                    div.col-2
+                        -var lineTot = item.quantity * item.price;
+                        -total += lineTot;
+                        h5 = $ #{lineTot}
+        div.row
+            div.col
+                if(total===0)
+                    h2 Your Cart Is Empty
+                else
+                    h3 Total = $#{total}
+            div.col
+                form(action='/customer/order/place' method='POST')
+                    input(type='hidden' name='id' value=orderInfo.id)
+                    if(orderInfo.status == 1)
+                        input(type='submit' value='Place Order')
                     else
-                        h3 Total = $#{total}
+                        input(type='submit' value='Order Placed' disabled)

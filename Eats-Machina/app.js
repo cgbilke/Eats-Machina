@@ -56,8 +56,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+function isManager(req, res, next) {
+    console.log(req.session.user);
+    if (typeof req.session.user !== 'undefined') {
+        if (req.session.user.role !== 'manager') { res.redirect('/'); }
+        else { next(); }
+    }
+    else { res.redirect('/login'); }    
+}
+function isCustomer(req, res, next) {
+    if (typeof req.session.user !== 'undefined') {
+        if (req.session.user.role !== 'customer') { res.redirect('/'); }
+        else { next(); }
+    }
+    else { res.redirect('/login'); }   
+}
+
 app.use('/', routes);
-app.get('/login', function (req, res, next) { if (req.session.user == null) { next() } }, function (req, res, next) { res.render('login', { title: 'Login' }) })
+app.get('/login', function (req, res, next) { if (req.session.user == null) { next(); } }, function (req, res, next) { res.render('login', { title: 'Login' }) })
 app.post('/login', function (req, res, next) {
     con.query("SELECT * FROM users WHERE username = '" + req.body.username + "' LIMIT 1", function (err, result) {
         if (err) { throw err };
@@ -71,7 +87,7 @@ app.post('/login', function (req, res, next) {
         else { res.render('login', { title: 'Login', error: 'user does not exist' }); }
     });
 });
-app.get('/signUp', function (req, res, next) { if (req.session.user == null) { next() } }, function (req, res, next) { res.render('signup', { title: 'Sign Up' }) })
+app.get('/signUp', function (req, res, next) { if (req.session.user == null) { next(); } }, function (req, res, next) { res.render('signup', { title: 'Sign Up' }) })
 app.post('/signUp', function (req, res, next) {
     con.query("SELECT * FROM users WHERE username = ? LIMIT 1", [req.body.username], function (err, result, fields) {
         if (err) { throw err}
@@ -86,9 +102,9 @@ app.post('/signUp', function (req, res, next) {
         }
     });
 });
-app.get('/logout', function (req, res, next) { req.session.user = null; res.redirect('/');})
-app.use('/manager', manager);
-app.use('/customer', customer);
+app.get('/logout', function (req, res, next) { req.session.user = null; res.redirect('/'); });
+app.use('/manager', isManager, manager);
+app.use('/customer', isCustomer, customer);
 //app.use('/users', usersRoute);
 
 // catch 404 and forward to error handler

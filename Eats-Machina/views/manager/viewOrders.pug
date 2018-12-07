@@ -1,8 +1,6 @@
 ﻿extends /layout
 
 block content
-    script.
-        var orders = '#{orders}';
     div(class='container')
         each order in orders
             div.row
@@ -23,6 +21,4 @@ block content
                 div.col-4
                     h4=order.createdDate
                 div.col-2
-                    form(method='POST')
-                        input(type='hidden' name='id' value=order.id)
-                        input(type='submit' class='btn-primary')
+                    a(href='/manager/order/'+order.id ): button.btn-primary(type='submit'): i.fas.fa-eye

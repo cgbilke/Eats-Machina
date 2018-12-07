@@ -35,7 +35,13 @@
     <Compile Include="routes\database.js">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="routes\index.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="routes\manager.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="routes\users.js">
       <SubType>Code</SubType>
     </Compile>
     <Content Include="package.json" />
@@ -48,6 +54,15 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="views\customer\viewOrders.pug">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\error.pug">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\manager\viewInventory.pug">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\manager\viewInventoryItem.pug">
       <SubType>Code</SubType>
     </Content>
     <Content Include="views\manager\viewOrder.pug">

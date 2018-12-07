@@ -33,7 +33,7 @@ router.route('/order')
     .get(function (req, res) {
         con.query("SELECT * FROM orders WHERE userId = ? AND active = true", [req.session.user.id], function (error, orderInfo) {
             if (error) { throw error; }
-            else if (orderInfo[0].status !== '1') {
+            else if (orderInfo[0].status !== 1) {
                 res.redirect('/customer/order/view');
             }
             else {                
@@ -83,7 +83,20 @@ router.route('/order/view')
 
 router.route('/order/place')
     .post(function (req, res) {
-        con.query("UPDATE orders SET status = 2 WHERE userId = ? AND active = true", [req.session.user.id], function (error) { if (error) { throw error; } });
+        var orderId = req.body.id;
+        con.query('SELECT itemId, quantity FROM ordersitems WHERE orderId = ?', [orderId], function (error, ordersitems) {
+            if (error) { throw error; }
+            else {
+                for (var item in ordersitems) {
+                    item = ordersitems[item];
+                    con.query('UPDATE items SET supply = supply - ? WHERE id = ?', [item.quantity, item.itemId], function (error) { if (error) { throw error; } });
+                }
+                con.query("UPDATE orders SET status = 2 WHERE userId = ? AND active = true", [req.session.user.id], function (error) {
+                    if (error) { throw error; }
+                    else { res.redirect('/customer/order')}
+                });
+            }
+        });
     });
 
 /*router.route('/order')
