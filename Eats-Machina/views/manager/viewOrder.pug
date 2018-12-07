@@ -1,0 +1,40 @@
+﻿extends /layout
+
+block content
+    div(class='container')
+        form(name="order" action='/customer/order' method='POST')
+            input(type='hidden' name='id' value=orderInfo.id)
+            case orderInfo.status
+                        when 1
+                            -var status = 'new'
+                        when 2
+                            -var status = 'ordered'
+                        when 3
+                            -var status = 'cooking'
+                        when 4
+                            -var status = 'canceled'
+                        when 5
+                            -var status = 'finished'
+            h1 Order #{orderInfo.id} Status #{status}
+            each item in order
+                if(item.id &&  item.quantity !== 0)
+                    div.row
+                        div.col-12
+                            h5=item.name
+                            h5=#{item.quantity}
+            div.row
+                div.col-12
+                h1 Status Change
+            div.row
+                div.col-lg-4
+                    form(method='POST')
+                        input(type='hidden' name='status' value='3')
+                        h1:input(type="submit" value="Cook")
+                div.col-lg-4
+                    form(method='POST')
+                        input(type='hidden' name='status' value='3')
+                        h1:input(type="submit" value="Cancel")
+                div.col-lg-4
+                    form(method='POST')
+                        input(type='hidden' name='status' value='3')
+                        h1:input(type="submit" value="Finish")

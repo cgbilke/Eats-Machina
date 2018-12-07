@@ -1,0 +1,28 @@
+﻿extends /layout
+
+block content
+    script.
+        var orders = '#{orders}';
+    div(class='container')
+        each order in orders
+            div.row
+                div.col-2
+                    h4=order.id
+                div.col-4
+                    case order.status
+                        when 1
+                            h4 new
+                        when 2
+                            h4 ordered
+                        when 3
+                            h4 cooking
+                        when 4
+                            h4 canceled
+                        when 5
+                            h4 finished
+                div.col-4
+                    h4=order.createdDate
+                div.col-2
+                    form(method='POST')
+                        input(type='hidden' name='id' value=order.id)
+                        input(type='submit' class='btn-primary')

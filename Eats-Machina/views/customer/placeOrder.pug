@@ -1,0 +1,20 @@
+﻿extends /layout
+
+block content
+    div(class='container')
+        form(name="order" action='/customer/order' method='POST')
+            input(type='hidden' name='id' value=orderInfo.id)
+            each item in order
+                input(type='hidden' name='orderitems['+item.name+'][id]' value=item.id)
+                input(type='hidden' name='orderitems['+item.name+'][itemId]' value=item.itemId)
+                div.form-group.row
+                    div.form-group.col-2
+                        h5=item.name
+                    div.form-group.col-4
+                        h5=item.description
+                    div.form-group.col-2
+                        h5 $#{item.price}
+                        input(type='hidden' name='orderitems['+item.name+'][cost]' value=item.price)
+                    div.form-group.col-2 #
+                        input.form-control(type="number" name='orderitems['+item.name+'][quantity]' value=item.quantity min='0' placeholder='0')
+            input(type='submit' class='btn-primary')
