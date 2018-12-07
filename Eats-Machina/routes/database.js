@@ -1,4 +1,4 @@
-﻿var mysql = require('mysql');
+﻿/*var mysql = require('mysql');
 var pool = mysql.createPool({
     host: "sql9.freemysqlhosting.net",
     user: "sql9267395",
@@ -19,4 +19,4 @@ exports.con = function (sql, callback) {
             callback(false, results);
         });
     });
-};
+};*/

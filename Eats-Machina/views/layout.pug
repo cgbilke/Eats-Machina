@@ -29,12 +29,18 @@ html
                                             a(class='nav-link', href='/manageer/inventory') Inventory
                                     else
                                         li(class='nav-item')
-                                            a(class='nav-link', href='/customer/order') Order
+                                            a(class='nav-link', href='/customer/order/new') New Order
                                         li(class='nav-item')
-                                            a(class='nav-link', href='/customer/cart') View Cart
+                                            a(class='nav-link', href='/customer/order') Change Order
+                                        li(class='nav-item')
+                                            a(class='nav-link', href='/customer/orders') View All Orders
+                                        li(class='nav-item')
+                                            a(class='nav-link', href='/customer/order/view') Cart
                                     li(class='nav-item')
                                         a(class='nav-link', href='/logout') Log Out
                                 else
+                                    li(class='nav-item')
+                                        a(class='nav-link', href='/signUp') Sign Up
                                     li(class='nav-item')
                                         a(class='nav-link', href='/login') Log in 
     block content

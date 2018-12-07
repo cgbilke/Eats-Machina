@@ -17,10 +17,79 @@ con.connect(function (err) {
     console.log("Connected!");
 });
 /* GET users listing. */
+router.route('/orders')
+    .get(function (req, res) {
+        con.query("SELECT * FROM orders WHERE userId = ?", [req.session.user.id], function (error, result) {
+            res.render('customer/viewOrders', {user: req.session.user, title: 'View Orders', orders: result});
+        });
+    })
+    .post(function (req, res) {
+        con.query("UPDATE orders SET active = false WHERE userId = ?", [req.session.user.id], function(error){ if(error) { throw error; } });
+        con.query("UPDATE orders SET active = true WHERE userId = ? AND id = ?", [req.session.user.id, req.body.id], function (error) { if (error) { throw error; } });
+        res.redirect('/customer/order');
+    });
+
 router.route('/order')
     .get(function (req, res) {
-        con.query("SELECT * FROM item", function (err, result, fields) {
-            res.render('order', { user: req.session.user, items: result, title: 'Place an order' });
+        con.query("SELECT * FROM orders WHERE userId = ? AND active = true", [req.session.user.id], function (error, orderInfo) {
+            if (error) { throw error; }
+            else if (orderInfo[0].status !== '1') {
+                res.redirect('/customer/order/view');
+            }
+            else {                
+                //con.query("SELECT oi.id, oi.orderId, oi.itemId, oi.cost, oi.quantity, it.name, it.description, it.supply, it.price FROM items it LEFT JOIN ordersitems oi on oi.itemId = it.id WHERE oi.orderId = ?", [orderInfo.id], function (error, result) {
+                con.query("SELECT oi.id, oi.orderId, it.id AS 'itemId', oi.cost, oi.quantity, it.name, it.description, it.supply, it.price FROM ordersitems oi RIGHT JOIN items it on oi.itemId = it.id AND oi.orderId = ?", [orderInfo[0].id], function (error, result) {
+                    if (error) { throw error;}
+                    res.render('customer/placeOrder', { user: req.session.user, order: result, orderInfo: orderInfo[0], title: 'Place an order' });
+                });
+            }
+        });
+    })
+    .post(function (req, res) {
+        var orderitems = req.body.orderitems;
+        var orderId = req.body.id;
+        for (var item in orderitems) {
+            item = orderitems[item];
+            if (item.id !== null && item.id !== '') { con.query("UPDATE ordersitems SET cost = ?, quantity = ? WHERE id = ?", [item.cost, item.quantity, item.id], function (error) { if (error) throw error; }); }
+            else if (item.quantity !== null && item.quantity !== '' && item.quantity !== '0') { con.query("INSERT into ordersitems VALUES(?,?,?,?,?)", [null, orderId, item.itemId, item.cost, item.quantity], function (error) { if (error) throw error; }); }
+        }
+        res.redirect('/customer/order/view');
+    });
+
+router.route('/order/new')
+    .get(function (req, res) {
+        con.query("UPDATE orders SET active = false WHERE userId = ?", [req.session.user.id], function (error, result) { if (error) { throw error; } });
+        con.query("INSERT into orders VALUES(?,?,?,?,?)", [null, 1, req.session.user.id, new Date(), true], function (error, result) {
+            if (error) { throw error; }
+            else {
+                res.redirect('/customer/order');
+            }
+        });
+    });
+
+router.route('/order/view')
+    .get(function (req, res) {
+        con.query("SELECT * FROM orders WHERE userId = ? AND active = true", [req.session.user.id], function (error, orderInfo) {
+            if (error) { throw error; }
+            else {
+                //con.query("SELECT oi.id, oi.orderId, oi.itemId, oi.cost, oi.quantity, it.name, it.description, it.supply, it.price FROM items it LEFT JOIN ordersitems oi on oi.itemId = it.id WHERE oi.orderId = ?", [orderInfo.id], function (error, result) {
+                con.query("SELECT oi.id, oi.orderId, oi.itemId, oi.cost, oi.quantity, it.name, it.description, it.supply, it.price FROM items it LEFT JOIN ordersitems oi on oi.itemId = it.id AND oi.orderId = ?", [orderInfo[0].id], function (error, result) {
+                    if (error) { throw error; }
+                    res.render('customer/viewOrder', { user: req.session.user, order: result, orderInfo:orderInfo[0], title: 'View Your order' });
+                });
+            }
+        });
+    });
+
+router.route('/order/place')
+    .post(function (req, res) {
+        con.query("UPDATE orders SET status = 2 WHERE userId = ? AND active = true", [req.session.user.id], function (error) { if (error) { throw error; } });
+    });
+
+/*router.route('/order')
+    .get(function (req, res) {
+        con.query("SELECT oi.id, oi.orderId, oi.itemId, oi.cost, oi.quantity, it.name, it.description, it.supply, it.price FROM item it LEFT JOIN orderitem oi on oi.itemId = it.id AND oi.orderId = ? ", function (err, result, fields) {
+            res.render('order', { user: req.session.user, order: result, title: 'Place an order' });
         });
     })
     .post(function (req, res) {
@@ -79,5 +148,5 @@ router.route('/cart')
             });
         });
     });
-
+    */
 module.exports = router;

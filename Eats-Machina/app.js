@@ -25,7 +25,7 @@ con.connect(function (err) {
 });
 //con.connect(function (err) { if (err) throw err; console.log("Connected!");});
 
-con.query("SELECT * FROM item", function (error, results, fields) {
+con.query("SELECT * FROM items", function (error, results, fields) {
     if (error) throw error;
     console.log('The solution is: ', results);
 });
@@ -40,6 +40,7 @@ var app = express();
 var users = [['testCust1', 'testCust1P', 'Johnny Smity', 'customer'], ['testMana1', 'testMana1P', 'Ricky Bobby','manager']];
 
 // view engine setup
+app.locals.basedir = path.join(__dirname, 'views');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(session({
@@ -51,14 +52,14 @@ app.use(session({
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.get('/login', function (req, res, next) { if (req.session.user == null) { next() } }, function (req, res, next) { res.render('login', { title: 'Login' }) })
 app.post('/login', function (req, res, next) {
-    con.query("SELECT * FROM user WHERE username = '" + req.body.username + "' LIMIT 1", function (err, result) {
+    con.query("SELECT * FROM users WHERE username = '" + req.body.username + "' LIMIT 1", function (err, result) {
         if (err) { throw err };
         if (result.length !== 0) {
             if (result[0].password === req.body.password) {
@@ -72,13 +73,13 @@ app.post('/login', function (req, res, next) {
 });
 app.get('/signUp', function (req, res, next) { if (req.session.user == null) { next() } }, function (req, res, next) { res.render('signup', { title: 'Sign Up' }) })
 app.post('/signUp', function (req, res, next) {
-    con.query("SELECT * FROM user WHERE username = ? LIMIT 1", [req.body.username], function (err, result, fields) {
+    con.query("SELECT * FROM users WHERE username = ? LIMIT 1", [req.body.username], function (err, result, fields) {
         if (err) { throw err}
         if (result.length !== 0) {
             res.render('signUp', { user: req.session.user, title: 'Sign Up', error: 'User already exists' })
         }
         else {
-            con.query("INSERT into user VALUES (?,?,?,?,?)", [null, req.body.username, req.body.password,'customer', req.body.name], function (err, result) {
+            con.query("INSERT into users VALUES (?,?,?,?,?)", [null, req.body.username, req.body.password,'customer', req.body.name], function (err, result) {
                 if (err) { throw err; }
                 res.render('login', { user: req.session.user, title: 'Login', error: 'Sucess, Please login' })
             });
