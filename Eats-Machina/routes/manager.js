@@ -10,6 +10,11 @@ var con = mysql.createConnection({
     database: "sql9267395"
 });
 
+con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected manager!");
+});
+
 /* GET users listing. */
 router.route('/orders')
     .get(function (req, res) {

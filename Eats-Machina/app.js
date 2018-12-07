@@ -17,19 +17,11 @@ var con = mysql.createConnection({
     database: "sql9267395"
 });
 
-//var con = mysql.createConnection({ host: "sql9.freemysqlhosting.net", user: "sql9267395", password: "1nSwiRFGPP", database: "sql9267395"});
 
 con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
 });
-//con.connect(function (err) { if (err) throw err; console.log("Connected!");});
-
-con.query("SELECT * FROM items", function (error, results, fields) {
-    if (error) throw error;
-    console.log('The solution is: ', results);
-});
-//con.query("SELECT * FROM item", function (error, results, fields) { if (error) throw error; console.log('The solution is: ', results); });
 
 var routes = require('./routes/index');
 var manager = require('./routes/manager');
@@ -47,7 +39,7 @@ app.set('view engine', 'pug');
 app.use(session({
     resave: true,
     saveUninitialized: true,
-    secret: "rickyBobby",
+    secret: "rickyBobby"
 }));
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -58,7 +50,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 function isManager(req, res, next) {
-    console.log(req.session.user);
     if (typeof req.session.user !== 'undefined') {
         if (req.session.user.role !== 'manager') { res.redirect('/'); }
         else { next(); }

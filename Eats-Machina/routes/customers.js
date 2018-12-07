@@ -10,13 +10,11 @@ var con = mysql.createConnection({
     database: "sql9267395"
 });
 
-//var con = mysql.createConnection({ host: "sql9.freemysqlhosting.net", user: "sql9267395", password: "1nSwiRFGPP", database: "sql9267395"});
-
 con.connect(function (err) {
     if (err) throw err;
-    console.log("Connected!");
+    console.log("Connected customer!");
 });
-/* GET users listing. */
+
 router.route('/orders')
     .get(function (req, res) {
         con.query("SELECT * FROM orders WHERE userId = ?", [req.session.user.id], function (error, result) {
