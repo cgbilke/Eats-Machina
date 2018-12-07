@@ -2,26 +2,31 @@
 
 block content
     div(class='container')
-        each order in orders
-            div.row
-                div.col-2
-                    h4=order.id
-                div.col-4
-                    case order.status
-                        when 1
-                            h4 new
-                        when 2
-                            h4 ordered
-                        when 3
-                            h4 cooking
-                        when 4
-                            h4 canceled
-                        when 5
-                            h4 finished
-                div.col-4
-                    h4=order.createdDate
-                div.col-2
-                    form(method='POST')
-                        input(type='hidden' name='id' value=order.id)
-                        //input.far.fa-edit(type='submit')
-                        button(type='submit'): i.far.fa-edit
+        h1= title
+        table.table
+            thead
+                tr
+                    th(scope='col') ID
+                    th(scope='col') Status
+                    th(scope='col') Created Date
+                    th(scope='col') Actions
+            tbody
+                each order in orders
+                    tr
+                        th(scope='row') #{order.id}
+                        case order.status
+                            when 1
+                                td new
+                            when 2
+                                td ordered
+                            when 3
+                                td cooking
+                            when 4
+                                td canceled
+                            when 5
+                                td finished
+                        td=moment(order.createdDate).format('MM/DD/YYYY, h:mm:ss a')
+                        td
+                            form(method='POST')
+                                input(type='hidden' name='id' value=order.id)
+                                button(type='submit'): i.far.fa-edit

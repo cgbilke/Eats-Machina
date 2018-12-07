@@ -41,6 +41,7 @@ var users = [['testCust1', 'testCust1P', 'Johnny Smity', 'customer'], ['testMana
 
 // view engine setup
 app.locals.basedir = path.join(__dirname, 'views');
+app.locals.moment = require('moment');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(session({

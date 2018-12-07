@@ -1,8 +1,21 @@
 ﻿body {
     padding: 50px;
+    padding-top: 0px;
+    background-color: rgb(246, 246, 246) !important;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+.container {
+    background-color: white;
+    padding: 20px;
+    padding-top:75px;
+    /*border-left: 1px solid rgba(50,50,50,.5);
+    border-right: 1px solid rgba(50,50,50,.5);*/
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .51), 0 6px 20px 0 rgba(254, 254, 254, 0);
+}
+.fixed-top {
+    position: absolute !important;
+}
 a {
     color: #00B7FF;
 }

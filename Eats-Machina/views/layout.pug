@@ -4,44 +4,37 @@ html
     title= title
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     link(rel='stylesheet', href='/stylesheets/main.css')
+    script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous")
     link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO", crossorigin="anonymous")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js", integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy", crossorigin="anonymous")
     link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous")  
   body
-    div(class='container-fluid navContainer')
-            nav(class='row')
-                div(class='col-12')
-                    div(class='navbar navbar-light navbar-expand-sm')
-                        a(href='/')
-                            img(width='100%' class='navbar-brand'  src='' alt="Eats-Machina")
-                        //if(user)
-                            li
-                                span=req.user.name
-
-                        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
-                            span(class="navbar-toggler-icon")
-                        div(class='collapse navbar-collapse' id='navbarSupportedContent')
-                            ul(class='navbar-nav ml-auto')
-                                if(user)
-                                    if(user.role == 'manager')
-                                        li(class='nav-item')
-                                            a(class='nav-link', href='/manager/orders') Orders
-                                        li(class='nav-item')
-                                            a(class='nav-link', href='/manager/inventory') Inventory
-                                    else
-                                        li(class='nav-item')
-                                            a(class='nav-link', href='/customer/order/new') New Order
-                                        li(class='nav-item')
-                                            a(class='nav-link', href='/customer/order') Change Order
-                                        li(class='nav-item')
-                                            a(class='nav-link', href='/customer/orders') View All Orders
-                                        li(class='nav-item')
-                                            a(class='nav-link', href='/customer/order/view') Cart
-                                    li(class='nav-item')
-                                        a(class='nav-link', href='/logout') Log Out
-                                else
-                                    li(class='nav-item')
-                                        a(class='nav-link', href='/signUp') Sign Up
-                                    li(class='nav-item')
-                                        a(class='nav-link', href='/login') Log in 
+    nav(class='navbar fixed-top navbar-dark bg-dark navbar-expand-sm')
+        a(class="navbar-brand" href="/") Eats-Machina
+        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+            span(class="navbar-toggler-icon")
+        div(class='collapse navbar-collapse' id='navbarSupportedContent')
+            ul(class='navbar-nav ml-auto')
+                if(user)
+                    if(user.role == 'manager')
+                        li(class='nav-item')
+                            a(class='nav-link', href='/manager/orders') Orders
+                        li(class='nav-item')
+                            a(class='nav-link', href='/manager/inventory') Inventory
+                    else
+                        li(class='nav-item')
+                            a(class='nav-link', href='/customer/order/new') New Order
+                        li(class='nav-item')
+                            a(class='nav-link', href='/customer/order') Change Order
+                        li(class='nav-item')
+                            a(class='nav-link', href='/customer/orders') View All Orders
+                        li(class='nav-item')
+                            a(class='nav-link', href='/customer/order/view') Cart
+                    li(class='nav-item')
+                        a(class='nav-link', href='/logout') Log Out
+                else
+                    li(class='nav-item')
+                        a(class='nav-link', href='/signUp') Sign Up
+                    li(class='nav-item')
+                        a(class='nav-link', href='/login') Log in 
     block content

@@ -2,36 +2,46 @@
 
 block content
     div(class='container')
-            case orderInfo.status
+        -var id = 0;
+        case orderInfo.status
                     when 1
-                        -var status = 'new'
+                        -var status = 'New'
                     when 2
-                        -var status = 'ordered'
+                        -var status = 'Ordered'
                     when 3
-                        -var status = 'cooking'
+                        -var status = 'Cooking'
                     when 4
-                        -var status = 'canceled'
+                        -var status = 'Canceled'
                     when 5
-                        -var status = 'finished'
-            h1 Order #{orderInfo.id} Status #{status}
-            each item in order
-                if(item.id &&  item.quantity !== 0)
-                    div.row
-                        div.col-12
-                            h5 #{item.name} #{item.quantity}
-            div.row
-                div.col-12
-                    h1 Status Change
-                div.row
-                    div.col-lg-4
-                        form(method='POST')
-                            input(type='hidden' name='status' value='3')
-                            h1: input(type="submit" value="Cook")
-                    div.col-lg-4
-                        form(method='POST')
-                            input(type='hidden' name='status' value='4')
-                            h1: input(type="submit" value="Cancel")
-                    div.col-lg-4
-                        form(method='POST')
-                            input(type='hidden' name='status' value='5')
-                            h1: input(type="submit" value="Finish")
+                        -var status = 'Finished'
+        h1 Order# #{orderInfo.id} Status: #{status}
+        table.table
+            thead
+                tr
+                    th(scope='col') #
+                    th(scope='col') Name
+                    th(scope='col') Quantity
+            tbody
+                each item in order
+                    tr
+                    if(item.id &&  item.quantity !== 0)
+                        -id++;
+                        th(scope='row') #{id}
+                        td #{item.name}
+                        td #{item.quantity}
+        div.row.text-center
+            div.col-12
+                h1 Status Change
+        div.row.text-center
+            div.col
+                form(method='POST')
+                    input(type='hidden' name='status' value='3')
+                    h1: input(type="submit" value="Cook")
+            div.col
+                form(method='POST')
+                    input(type='hidden' name='status' value='4')
+                    h1: input(type="submit" value="Cancel")
+            div.col
+                form(method='POST')
+                    input(type='hidden' name='status' value='5')
+                    h1: input(type="submit" value="Finish")

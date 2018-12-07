@@ -2,40 +2,46 @@
 
 block content
     div(class='container')
-        -var total = 0
         case orderInfo.status
                     when 1
-                        -var status = 'new'
+                        -var status = 'New'
                     when 2
-                        -var status = 'ordered'
+                        -var status = 'Ordered'
                     when 3
-                        -var status = 'cooking'
+                        -var status = 'Cooking'
                     when 4
-                        -var status = 'canceled'
+                        -var status = 'Canceled'
                     when 5
-                        -var status = 'finished'
-        h1 Order #{orderInfo.id} Status #{status}
-        each item in order
-            if(item.id &&  item.quantity !== 0)
-                div.row
-                    div.col-2
-                        h5=item.name
-                    div.col-4
-                        h5=item.description
-                    div.col-1
-                        h5 $#{item.price}
-                    div.col-1
-                        h5 X  ##{item.quantity}
-                    div.col-2
-                        -var lineTot = item.quantity * item.price;
-                        -total += lineTot;
-                        h5 = $ #{lineTot}
+                        -var status = 'Finished'
+        h1 Order# #{orderInfo.id} Status: #{status}
+        -var total = 0
+        table.table
+            thead
+                tr
+                    th(scope='col') Name
+                    th(scope='col') Description
+                    th(scope='col') Price
+                    th(scope='col')
+                    th(scope='col') Quantity
+                    th(scope='col') Line Total
+            tbody
+                each item in order
+                    tr
+                    if(item.id &&  item.quantity !== 0)
+                        th(scope='row') #{item.name}
+                            td #{item.description}
+                            td $#{item.price}
+                            td X
+                            td ##{item.quantity}
+                            -var lineTot = item.quantity * item.price;
+                            -total += lineTot;
+                            td $#{lineTot}
         div.row
             div.col
                 if(total===0)
                     h2 Your Cart Is Empty
                 else
-                    h3 Total = $#{total}
+                    h2 Total = $#{total}
             div.col
                 form(action='/customer/order/place' method='POST')
                     input(type='hidden' name='id' value=orderInfo.id)
