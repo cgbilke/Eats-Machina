@@ -1,0 +1,33 @@
+﻿extends /layout
+
+block content
+    div(class='container')
+        -var id = 0;
+         h1= title
+        table.table
+            thead
+                tr
+                    th(scope='col') #
+                    th(scope='col') Name
+                    th(scope='col') Description
+                    th(scope='col') Supply
+                    th(scope='col') Price
+                    th(scope='col') Actions
+            tbody
+                tr
+                    th(scope='row') NEW
+                    form(method='POST')
+                        td: input.form-control(type='text' name='name')
+                        td: input.form-control(type='text' name='description')
+                        td: input.form-control(type='text' name='supply')
+                        td: input.form-control(type='text' name='price')
+                        td: button.btn-primary(type='submit'): i.fas.fa-plus
+                each item in inventory
+                    tr
+                        -id++;
+                        th(scope='row') #{id}
+                        td #{item.name}
+                        td #{item.description}
+                        td ##{item.supply}
+                        td $#{item.price}
+                        td: a(href='/manager/inventory/' + item.id ): button.btn-primary(): i.fas.fa-eye

@@ -1,0 +1,22 @@
+﻿extends /layout
+
+block content
+    div(class='container')
+        h1 Edit #{item.name}
+        form(method='POST')
+            div.form-group.row
+                    div.form-group.col-2
+                        label(for="name") Name
+                        input.form-control(type='text' name='name' value=item.name)
+                    div.form-group.col-4
+                        label(for="description") Description
+                        input.form-control(type='text' name='description' value=item.description)
+                    div.form-group.col-2
+                        label(for="supply") Supply
+                        input.form-control(type='text' name='supply' value=item.supply)
+                    div.form-group.col-2
+                        label(for="price") Price
+                        input.form-control(type='text' name='price' value=item.price)
+                    div.form-group.col-2
+                            br
+                            button.btn-primary(type='submit'): i.far.fa-edit
