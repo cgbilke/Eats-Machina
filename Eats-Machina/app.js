@@ -79,7 +79,7 @@ app.post('/login', function (req, res, next) {
         else { res.render('login', { title: 'Login', error: 'user does not exist' }); }
     });
 });
-app.get('/signUp', function (req, res, next) { if (req.session.user == null) { next(); } }, function (req, res, next) { res.render('signup', { title: 'Sign Up' }) })
+app.get('/signUp', function (req, res, next) { if (req.session.user == null) { next(); } }, function (req, res, next) { res.render('signUp', { title: 'Sign Up' }); });
 app.post('/signUp', function (req, res, next) {
     con.query("SELECT * FROM users WHERE username = ? LIMIT 1", [req.body.username], function (err, result, fields) {
         if (err) { throw err}
